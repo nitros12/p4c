@@ -5,8 +5,7 @@
 
 enum gpu_action {
     DROP,
-    PASS,
-    REDIRECT
+    EMIT
 }
 
 struct standard_metadata {
