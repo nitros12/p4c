@@ -61,6 +61,10 @@ control pipe(inout Headers_t hdr, inout metadata meta, inout standard_metadata s
 
     bit<8> y = 0;
 
+    action drop() {
+      std_meta.output_action = gpu_action.DROP;
+    }
+
     action mod_nw_tos(inout bit<8> x, bit<32> out_port) {
         x = x + 1;
         hdr.ipv4.diffserv = x;
@@ -78,12 +82,13 @@ control pipe(inout Headers_t hdr, inout metadata meta, inout standard_metadata s
 
         actions = {
             mod_nw_tos(i0);
+            drop();
         }
 
         const entries = {
-             0: mod_nw_tos(i0, 1);
+             0: mod_nw_tos(i0, 0);
              1: mod_nw_tos(i0, 0);
-             _: mod_nw_tos(i0, 2);
+             _: drop();
         }
     }
 
